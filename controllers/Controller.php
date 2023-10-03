@@ -77,25 +77,6 @@ class Controller extends Database
         return $value;
     }
 
-    public function productExists(int $productId, $product_data = null)
-    {
-
-        $sql = 'SELECT * FROM products WHERE id=?';
-        $this->mysqlHeader($sql, ['types' => 'i', 'values' => [$productId]]);
-
-        if ($this->data->num_rows === 0) {
-            http_response_code(200);
-            return false;
-        }
-
-        if ($product_data !== null) {
-            $product_data = $this->data->fetch_assoc();
-
-            return $product_data;
-        }
-
-        return true;
-    }
 
     public function userExists(string $username, string $email, $user_data = null)
     {

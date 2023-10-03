@@ -10,7 +10,7 @@ class Database
     protected $localhost = "localhost";
     protected $username = "root";
     protected $password = "";
-    protected $database = "php_api_jwt";
+    protected $database = "dateskip";
 
     protected $mysqli = "";
     private array $result = [];
