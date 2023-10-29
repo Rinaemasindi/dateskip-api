@@ -14,14 +14,14 @@ class LoginGateway extends Database
         $this->database = $db_name;
     }
 
-    function userExists($username,$email)
+    function userExists($email)
     {
-        $sql = "SELECT * FROM users WHERE username=? OR email=?";
+        $sql = "SELECT * FROM Users WHERE Email=?";
 
         // Create a prepared statement
         if ($stmt = $this->conn->prepare($sql)) {
 
-            $stmt->bind_param("ss", $username, $email);
+            $stmt->bind_param("s", $email);
 
             // Execute the prepared statement
             $stmt->execute();
@@ -33,14 +33,14 @@ class LoginGateway extends Database
         }
     }
 
-    function getUser($username,$email)
+    function getUser($email)
     {
-        $sql = "SELECT * FROM users WHERE username=? OR email=?";
+        $sql = "SELECT * FROM Users WHERE Email=?";
 
         // Create a prepared statement
         if ($stmt = $this->conn->prepare($sql)) {
 
-            $stmt->bind_param("ss", $username, $email);
+            $stmt->bind_param("s", $email);
 
             // Execute the prepared statement
             $stmt->execute();

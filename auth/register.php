@@ -18,20 +18,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die();
 }
 
+// $register_data = json_decode(file_get_contents("php://input", true));
 
-$register_data = json_decode(file_get_contents("php://input", true));
-
-$name = htmlentities($register_data->name);
-$surname = htmlentities($register_data->surname);
-$username = htmlentities($register_data->username);
-$email = htmlentities($register_data->email);
-// $password = htmlentities($password); //sha1($password)); //password_hash($register_data->password, PASSWORD_BCRYPT));
-$password = htmlentities($register_data->password); // enicodex.2023
+$username = htmlentities($_POST["username"]);
+$email = htmlentities($_POST["email"]);
+$phone = htmlentities($_POST["phone"]);
+$gender = htmlentities($_POST["gender"]);
+$age = htmlentities($_POST["age"]);
+$location = htmlentities($_POST["location"]);
+$profile_picture = htmlentities($_POST["profilePicture"]);
+$bio = htmlentities($_POST["bio"]);
+$password = htmlentities($_POST["password"]); // enicodex.2023
 $new_password = password_hash($password, PASSWORD_DEFAULT); //htmlentities();
-$user_role = htmlentities($register_data->role ?? '');
 
-
-if (empty($name) || empty($surname) || empty($username) || empty($email) || empty($password)) {
+if (empty($username) || empty($email) || empty($password) || empty($phone)|| empty($gender) || empty($age)) {
     echo json_encode([
         'status' => 0,
         'message' => "One or more field is Empty! \n Please Fill in all Fields and Try Again!"
@@ -41,9 +41,9 @@ if (empty($name) || empty($surname) || empty($username) || empty($email) || empt
 }
 
 
-$user_data = $obj->userExists($username, $email, true);
-$result = $obj->getResult();
 
+$user_data = $obj->userExists($email, true);
+$result = $obj->getResult();
 
 if ($user_data || $result[0]['user_exists']) {
     http_response_code(500);
@@ -55,16 +55,17 @@ if ($user_data || $result[0]['user_exists']) {
     die();
 }
 
-
-
-$obj->insert('users', [
-    'name' => $name,
-    'surname' => $surname,
-    'username' => $username,
-    'email' => $email,
-    'password' => $new_password,
-    'role' => !empty($user_role) ? $user_role : 'standard',
-    'created_at' => $datetime->format_str('Y-m-d H:i:s')
+$obj->insert('Users', [
+    'Phone' => $phone,
+    'Username' => $username,
+    'ProfilePicture ' => $profile_picture ,
+    'Gender' => $gender,
+    'Bio' => $bio,
+    'Age' => $age,
+    'Location' => $location,
+    'Email' => $email,
+    'Password' => $new_password,
+    'RegistrationDate' => $datetime->format_str('Y-m-d H:i:s')
 ]);
 $result = $obj->getResult();
 
@@ -74,8 +75,6 @@ if ($result[1]['insert'] !== 1) {
         'status' => 0,
         'message' => 'Something went wrong, Server Problem!',
     ]);
-
-
     die();
 }
 

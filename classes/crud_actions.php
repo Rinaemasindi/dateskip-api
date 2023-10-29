@@ -21,7 +21,7 @@ class CRUD extends Controller
 
             extract($params);
 
-            $uid = $params['name'] ?? $params['user_id'];
+            // $uid = $params['username'] ?? $params['UserID'];
 
             // if ($this->userExists($uid, $email ?? '')) {
             //     echo 'params' . "\n";

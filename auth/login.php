@@ -32,7 +32,7 @@ $username = $_POST['username'] ?? '';
 $email = $_POST['email'] ?? '';
 $password = $_POST['password']; 
 
-if (!$loginGateway->userExists($username, $email)) {
+if (!$loginGateway->userExists($email)) {
     http_response_code(200);
     echo json_encode([
         'status' => 0,
@@ -41,9 +41,9 @@ if (!$loginGateway->userExists($username, $email)) {
     die();
 }
 
-$obj->select('users', '*', null, "username='$username' OR email='$email'", null, null);
+$obj->select('Users', '*', null, "Email='$email'", null, null);
 
-$data = $obj->userExists($username, $email, true);
+$data = $obj->userExists($email, true);
 
 // user login token time-left to expire
 $exp_login_token_time = $datetime->set_expire_time(60);
@@ -52,13 +52,11 @@ $login_token_time_tostr = $exp_login_token_time['time_to_str'];
 
 # Only when debugging: echo $login_token_time_tostr;
 
-$id = $data['id'] ?? '';
-$name = $data['name'];
-$surname = $data['surname'];
-$username = $data['username'] ?? '';
-$email = $data['email'] ?? '';
-$user_password = $data['password'] ?? '';
-$user_role = $data['role'] ?? '';
+$id = $data['UserID'] ?? '';
+$username = $data['Username'] ?? '';
+$email = $data['Email'] ?? '';
+$Phone = $data['Phone'] ?? '';
+$user_password = $data['Password'] ?? '';
 
 if (!password_verify($password, $user_password)) {
     echo json_encode([
@@ -74,11 +72,8 @@ $payload = [
     'exp' => $login_token_time_to_exp, // 30min
     'data' => [
         'id' => $id,
-        'name' => $name,
-        'surname' => $surname,
         'username' => $username,
         'email' => $email,
-        'user_role' => $user_role
     ]
 ];
 
@@ -97,8 +92,7 @@ echo json_encode([
     'status' => 1,
     'user' => [
         'id'=>$id,
-        'name' => $name,
-        'surname' => $surname
+        'username' => $username
     ],
     'jwt' => $json_web_token, // only if you want to manipulate token in front_end 
     'message' => 'Login Successfully!',
@@ -108,12 +102,3 @@ if (isset($_COOKIE['jwt_token']) && !empty($_COOKIE['jwt_token'])) exit();
 
 setcookie('jwt_token', $json_web_token, $cookie_params);
 
-if ($user_role === 'admin') {
-    setcookie('user_role', $user_role,  [
-        'expires' => $login_token_time_to_exp,
-        'path' => '/',
-        'secure' => true,
-        'httponly' => true,
-        'samesite' => 'Strict'
-    ]);
-}

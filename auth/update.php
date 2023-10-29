@@ -34,14 +34,10 @@ if (!$token_data) {
 $updatedData = json_decode(file_get_contents("php://input")) ?? die();
 
 $id = htmlentities($updatedData->id ?? '');
-$name = htmlentities($updatedData->name ?? '');
-$surname = htmlentities($updatedData->name ?? '');
 $username = htmlentities($updatedData->username ?? '');
 $email = htmlentities($updatedData->email ?? '');
 $password = htmlentities($updatedData->password ?? '');
 $new_password = password_hash($password, PASSWORD_DEFAULT);
-$user_role = htmlentities($updatedData->role ?? '');
-
 
 if (empty($id)) {
     http_response_code(500);
@@ -59,11 +55,10 @@ $updated_user = [
     'role' => $user_role
 ];
 
-
 if (!empty($id) || !empty($user_role)) {
     $obj->update('users', "role = '{$user_role}'", "id = {$id}");
 } else {
-    $obj->update('users', $updated_user, "id = {$id}");
+    $obj->update('Users', $updated_user, "UserID = {$id}");
 }
 
 

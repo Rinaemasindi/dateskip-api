@@ -2,9 +2,12 @@
 header('Access-Control-Allow-Origin: *');
 header('Access-Conrol-Allow-Method: POST');
 header('Content-Type: application/json; Charset=UTF-8');
+
 require 'classes/ErrorHandler.php';
 require '../classes/crud_actions.php';
-include '../auth/classes/auth.php';
+require '../auth/classes/auth.php';
+require 'classes/RequestController.php';
+
 ini_set('display_errors', 'On');
 set_exception_handler("ErrorHandler::handleException");
 
@@ -36,4 +39,4 @@ if (!in_array($resource, $validPathArray)) {
 }
 
 $requestController = new RequestController($method, $resource, $id);
-$userController->processRequest();
+$requestController->processRequest();

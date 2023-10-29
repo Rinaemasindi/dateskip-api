@@ -13,19 +13,16 @@ class UserPreferences extends Database
         $this->database = $db_name;
     }
 
-    function getUserPreferences() {
-        $sql = "SELECT * FROM UserPreferences";
-        $result = $this->conn-> query($sql);
-        $result->fetch_all(MYSQLI_ASSOC);
-        return $result->free_result();
+    function getUserPreferences($id) {
+        $sql = "SELECT * FROM UserPreferences where UserID = ?";
+        return $this->conn->execute_query($sql, [$id])->fetch_assoc();
     }
     
-    // Insert user preferences into the UserPreferences table
-    public function updateUserPrefences($userID, $preferredGender, $minAge, $maxAge, $locationRadius)
+    public function updateUserPrefences($userID, $data)
     {
-        $sql = "INSERT INTO UserPreferences (UserID, PreferredGender, MinAge, MaxAge, LocationRadius) VALUES (?, ?, ?, ?, ?)";
+        $sql = "UPDATE UserPreferences SET PreferredGender = ? , MinAge = ?, MaxAge = ?, LocationRadius = ? WHERE UserID = ?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$userID, $preferredGender, $minAge, $maxAge, $locationRadius]);
+        return $stmt->execute([$data['preferredGender'], $data['minAge'], $data['maxAge'], $data['locationRadius'], $userID]);
     }
 
 }

@@ -78,10 +78,10 @@ class Controller extends Database
     }
 
 
-    public function userExists(string $username, string $email, $user_data = null)
+    public function userExists(string $email, $user_data = null)
     {
-        $sql = 'SELECT * FROM users WHERE username=? OR email=?';
-        $this->mysqlHeader($sql, ['types' => 'ss', 'values' => [$username, $email]]);
+        $sql = 'SELECT * FROM Users WHERE Email = ?';
+        $this->mysqlHeader($sql, ['types' => 's', 'values' => [$email]]);
 
         if ($this->data->num_rows === 0) {
             $this->result[] = ['user_exists' => false];
